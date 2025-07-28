@@ -1,0 +1,144 @@
+﻿<Window x:Class="WpfBankProject.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfBankProject"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- for the button -->
+            <RowDefinition Height="*"/>    <!-- for the table -->
+            
+        </Grid.RowDefinitions>
+
+
+        <Button Content="Import MT940 file"
+                Click="ImportRawLines_Click"
+                Width="200"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,10"
+                Grid.Row="0" />
+
+
+        <DataGrid x:Name="RawLinesGrid"
+          ItemsSource="{Binding Lines}"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          RowDetailsVisibilityMode="VisibleWhenSelected"
+          Grid.Row="1"
+          Margin="10">
+
+            <!-- Make the error line in red -->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasFormatError}" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <!--<Setter Property="ToolTip" Value="Format error: the line does not comply with the SWIFT MT940 format."/>-->
+
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Columns>
+                <!-- Column 1-->
+                <DataGridTemplateColumn Header="Tag" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Tag}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="🛈" 
+                                   Foreground="DarkRed"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   ToolTip="Format error : the line does not comply with the SWIFT MT940 format."
+                                   Visibility="{Binding HasFormatError, Converter={StaticResource BoolToVisibilityConverter}}"
+                                   Cursor="Hand"/>
+                                
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Column 2-->
+                <DataGridTemplateColumn Header="Content" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Content}" 
+                                 IsReadOnly="True" 
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="10,0,0,5">
+
+                        <!-- Details of :61: -->
+                        <StackPanel>
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Tag}" Value="61">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                            </StackPanel.Style>
+
+                            <TextBlock FontWeight="Bold" Text="Détails de la ligne :61:" Margin="0,5,0,2"/>
+
+                            <TextBlock Text="{Binding Details61.ValueDate, StringFormat='Subfield 1, Value Date : {0:yyyy-MM-dd}'}"/>
+                            <TextBlock Text="{Binding Details61.EntryDate, StringFormat='Subfield 2, Entry Date : {0:MM-dd}'}"/>
+                            <TextBlock Text="{Binding Details61.DebitCredit, StringFormat='Subfield 3, Debit/Credit : {0}'}"/>
+                            <TextBlock Text="{Binding Details61.Amount, StringFormat='Subfield 4, Amount : {0:C2}'}"/>
+                            <TextBlock Text="{Binding Details61.TransactionType, StringFormat='Subfield 5, Type : {0}'}"/>
+                            <TextBlock Text="{Binding Details61.Reference, StringFormat='Subfield 6, Ref : {0}'}"/>
+                            <TextBlock Text="{Binding Details61.Reference2, StringFormat='Subfield 7, Ref 2 : {0}'}"/>
+                        </StackPanel>
+
+                        <!-- Details of :86: -->
+                        <StackPanel Margin="0,10,0,0">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Tag}" Value="86">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                            </StackPanel.Style>
+
+                            <TextBlock FontWeight="Bold" Text="Details of line :86:" Margin="0,5,0,2"/>
+
+                            <ItemsControl ItemsSource="{Binding Details86.DescriptionLines}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="• " FontWeight="Bold" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="5,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+    </Grid>
+</Window>

@@ -1,0 +1,81 @@
+﻿# Build results
+bin/
+obj/
+out/
+[Bb]uild/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+
+# Rider / JetBrains IDE
+.idea/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Build logs
+*.log
+
+# Publish outputs
+publish/
+app.publish/
+
+# Other generated files
+*.dbmdl
+*.bak
+*.cache
+*.pdb
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Others
+*.vspscc
+*.vssscc
+*.orig
+*.tmp
+*.swp
+*.sln.iml
+
+# dotenv (if used)
+.env
+
+# Ignore MT940 sample files
+*.mt940
+*.sta
+
+# WPF specific
+*.g.*
+*.i.*
+*.baml
+*.xaml.cs (if generated, but usually keep manually coded ones)
+
+# Local test files
+*.local
